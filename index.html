@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>My IPTV Player</title>
-
-  <link rel="stylesheet" href="player.min.css">
-</head>
-<body>
-
-  <div id="playlist"></div>
-  <div id="player"></div>
-
-  <script src="jwplayer.js"></script>
-  <script src="player.min.js"></script>
-
-</body>
-</html>
+<script src="jwplayer.js"></script>
+<script src="player.min.js"></script>
+<script>
+    // Example of how a custom player might be initialized
+    initPlayer({
+        playlist: "https://raw.githubusercontent.com/therealddh/mosahaji/refs/heads/main/w.m3u"
+    });
+</script>
