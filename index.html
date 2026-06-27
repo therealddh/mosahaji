@@ -1,8 +1,86 @@
-<script src="jwplayer.js"></script>
-<script src="player.min.js"></script>
-<script>
-    // Example of how a custom player might be initialized
-    initPlayer({
-        playlist: "https://raw.githubusercontent.com/therealddh/mosahaji/refs/heads/main/w.m3u"
-    });
-</script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Shaka Player compiled library: -->
+    <script src="https://ajax.googleapis.com/ajax/libs/shaka-player/4.4.1/shaka-player.compiled.js"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      var manifestUri =
+        "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/xperu6ixu9/out/v1/31d30c91fc65458789b84209d3fa22e4/cenc.mpd";
+
+      function initApp() {
+        // Install built-in polyfills to patch browser incompatibilities.
+        shaka.polyfill.installAll();
+
+        // Check to see if the browser supports the basic APIs Shaka needs.
+        if (shaka.Player.isBrowserSupported()) {
+          // Everything looks good!
+          initPlayer();
+        } else {
+          // This browser does not have the minimum set of APIs we need.
+          console.error("Browser not supported!");
+        }
+      }
+
+      function initPlayer() {
+        // Create a Player instance.
+        var video = document.getElementById("video");
+        var player = new shaka.Player(video);
+
+        player.configure({
+          drm: {
+            clearKeys: {
+              // 'key-id-in-hex': 'key-in-hex',
+              "1f68713028d439ec03be07f56c1d6213" : "20093db6455160fffed4c394def3193d",
+            },
+          },
+        });
+
+        console.log(player.getConfiguration());
+
+        // Attach player to the window to make it easy to access in the JS console.
+        window.player = player;
+
+        // Listen for error events.
+        player.addEventListener("error", onErrorEvent);
+
+        // Try to load a manifest.
+        // This is an asynchronous process.
+        player
+          .load(manifestUri)
+          .then(function () {
+            // This runs if the asynchronous load is successful.
+            console.log("The video has now been loaded!");
+          })
+          .catch(function () {
+            // onError is executed if the asynchronous load fails.
+            onError(e);
+          });
+      }
+
+      function onErrorEvent(event) {
+        // Extract the shaka.util.Error object from the event.
+        onError(event.detail);
+      }
+
+      function onError(error) {
+        // Log the error.
+        console.error("Error code", error.code, "object", error);
+      }
+
+      document.addEventListener("DOMContentLoaded", initApp);
+    </script>
+    <video id="video" controls autoplay></video>
+  </body>
+</html>
